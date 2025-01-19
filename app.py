@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
-
+from flask import Flask, redirect, request
 
 
 
@@ -21,6 +21,15 @@ class WasteSubmission(db.Model):
     pickup_address = db.Column(db.Text, nullable=False)
     contact_info = db.Column(db.String(100), nullable=False)
     submission_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+
+
+
+
+@app.before_request
+def force_https():
+    if not request.is_secure:
+        return redirect(request.url.replace("http://", "https://"), code=301)
 
 # Routes
 @app.route('/')
